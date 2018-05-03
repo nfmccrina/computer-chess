@@ -3,9 +3,9 @@ module Lib
     ) where
 
 --import Data.Vector.Unboxed
-import Bitboard (popFirstBit)
+import Bitboard (lsb)
 import Random
 import Numeric (showHex)
 
 someFunc :: IO ()
-someFunc = print (popFirstBit 0x0000000000000004)
+someFunc = print (lsb 0x2000000000000000)
