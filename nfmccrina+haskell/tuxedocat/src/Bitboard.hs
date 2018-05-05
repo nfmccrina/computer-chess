@@ -3,7 +3,7 @@ module Bitboard
         rookMask,
         lsb,
         removeLSB,
-        blockersAndAttacks,
+        occupancyAndAttacks,
         slidingMovesN,
         slidingMovesS,
         slidingMovesE,
@@ -75,17 +75,17 @@ rookMask square = (col .&. (xor col (topEdgeMask .|. bottomEdgeMask))) .|. (row 
             col = getMask nsMasks (shift 1 square)
             row = getMask ewMasks (shift 1 square)
 
-blockersAndAttacks :: Int -> Word64 -> Vector (Word64, Word64)
-blockersAndAttacks square mask = fromList $ Prelude.map (getBlockerAndAttack square mask) [0..((shift 1 (popCount mask)) - 1)]
+occupancyAndAttacks :: Int -> Word64 -> Vector (Word64, Word64)
+occupancyAndAttacks square mask = fromList $ Prelude.map (getOccupancyAndAttack square mask) [0..((shift 1 (popCount mask)) - 1)]
 
 
-getBlockerAndAttack :: Int -> Word64 -> Int -> (Word64, Word64)
-getBlockerAndAttack square mask index = (b, rookAttacks square b)
+getOccupancyAndAttack :: Int -> Word64 -> Int -> (Word64, Word64)
+getOccupancyAndAttack square mask index = (b, rookAttacks square b)
     where
-        b = indexToWord64 index (popCount mask) mask
+        b = indexToOccupancy index (popCount mask) mask
 
-indexToWord64 :: Int -> Int -> Word64 -> Word64
-indexToWord64 index bits mask = fst (Prelude.foldl
+indexToOccupancy :: Int -> Int -> Word64 -> Word64
+indexToOccupancy index bits mask = fst (Prelude.foldl
     (\x y ->
         if not ((index .&. (shift 1 y)) == 0)
         then ((fst x) .|. shift 1 (lsb (snd x)), removeLSB (snd x))

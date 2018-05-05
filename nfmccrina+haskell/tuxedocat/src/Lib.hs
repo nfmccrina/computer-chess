@@ -6,6 +6,7 @@ module Lib
 import Bitboard (lsb)
 import Random
 import Numeric (showHex)
+import Magic
 
 someFunc :: IO ()
-someFunc = print (lsb 0x2000000000000000)
+someFunc = (findRookMagic 20 10) >>= (\m -> (putStrLn "Done."))
